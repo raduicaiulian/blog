@@ -44,9 +44,9 @@
 	display: inline;
 	position: absolute;
 	top: 0px;
-	left: 170px;
-	width: 200%;
-	margin: 50px 0 0 -200%;
+	left: 140px;
+	width: 100%;
+	margin: 39px -170px;
 	padding: 8px 32px;
 	color: #fff;
 	font-weight: normal;
@@ -54,8 +54,6 @@
 	text-align: left;
 	border: 1px solid #1b2062;
 	font-size: 18px;
-	left: 450px;
-	transform: translate(0%,0%);
 }
 
 
