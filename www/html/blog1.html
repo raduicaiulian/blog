@@ -17,8 +17,18 @@
 	</div>
 
 	<div class="content">
-		By system backups I'm referring to making a copy of the entire drive that contains am os on it, so in this blog we'll take a look at the most convenient options available to make this kind of backups.
-		<h3>Problem</h3>
+		Did you ever wondered how make a backup of the entire operating system system? I mean wouldn't be nice to export the state of <div id="popup">the entire system<span>GPT/MBR+ESP/Boot partition+OS main partition(ext4/ntfs/zfs ...)</span></div> in order to recover it later if an unfortunate event occurs. Kind of a VM snapshot, but on a real system.
+<br><br>
+Well, this is a question that popped in my mind after a lot of ..., let say <div id="popup">experiments<span>trying to make a dual boot setup while distro hopping, kernel recompilation done incorrectly</span></div> keep breaking my system over and over again and made me spend a lot of time trying to repair because of data that I do not afford to lose, don't get me wrong the skills learned while trying to repair a bootloader and to recover from system failure are very valuable, but too often this kind of problems keep you from doing other important activities.
+<br><br>
+		
+In the following I will present you my use case requirements and some of the solutions found.
+
+<h3>Raw copy</h3>
+
+		One of the first use cases was to backup a 128 SSD in order to test something on some distro, talking about a relative small disk I tried to copy it using <a href="https://www.man7.org/linux/man-pages/man1/dd.1.html">dd(1)</a>, the result was pretty inconvenient because the whole process took <div id="popup">about 4h<span>this was because the destination drive was a sshfs share with a NIC of only 100 Mb/s ~ 12.5 MB/s</span></div> and, nevertheless, faced some file system corruption because I forgot to unmount the drive that were backed up at that time, apart from that dd did his job but used 128 GB of storage even if the allocated space on that disk was under 50%.
+<br><br>
+<!-- 
 			These days I had the 
 			<div id="popup">following setup
 				<span>
@@ -29,9 +39,18 @@
 				</span>
 			
 			</div>, and decided that I would like to change the os from the <div id="popup">first disk<span>256 GB one</span></div>.
+-->
+<h3>Backup of each partition</h3>
+		This is a slightly more advanced approach because comes with the following advantages:
+			<ul>
+				<li>takes way less space</li>
+				<li>it runs faster</li>
+				<li>it is easier to resize a partition</li>
+			</ul>
+		The steps used to make this kind of backup where the following:
+			.....
 
-
-
+<!--
 		<h3>Solutions</h3>
 		<ul>
 			<li>raw copy of the entire drive using dd</li>
@@ -46,6 +65,7 @@
 	<p>
 		Fot that usecase a raw coppy was pretty ok becouse the disk was about 80% full, but now I'm facing the case that I have a disk wich is about 11% full, in this a raw backup is not eficient so I will explore the second solution.
 	</p>
+-->
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<br><br><br><br><br><br><br>
 

@@ -1,0 +1,14 @@
+form {
+  margin-top: 30px;
+}
+
+form > * {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+input, textarea{
+  margin: 12px auto !important;
+  width: 80%;
+}
