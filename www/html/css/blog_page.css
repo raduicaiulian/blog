@@ -1,5 +1,7 @@
 /*https://stackoverflow.com/questions/7049952/what-are-the-default-margins-for-the-html-heading-tags-h1-h2-h3-etc*/
 /*http://howtocenterincss.com/#contentType=div&horizontal=left&vertical=middle*/
+
+/*rgb(73, 57, 122) - pusple as gentoo */
 @font-face {
     font-family: Fontin;
     src: url(../Fontin.otf);
