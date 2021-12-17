@@ -46,9 +46,10 @@ body {
 }
 
 .content {
+  text-align: justify;
   padding: 100px 0;
   margin: 50px auto 0 auto;
-  width: 80%;
+  width: 800px;
 }
 /*heading sizes */
 
@@ -65,7 +66,7 @@ h3 {
 ul{
   font-family: Verdana, Arial, Helvetica, sans-serif;
   list-style-type:disc;
-  margin: 10px;
+  margin: 16px;
   /*font-size: 12px;*/
   line-height: 2em;
 }
@@ -77,6 +78,53 @@ ul{
   transform: translate(18%,-58%);
 }
 
-p{
+p {
   padding-bottom: 20px;
+}
+
+.unselecable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+}
+
+.date {
+	position: fixed;
+	bottom: 20px;
+	z-index: -1;
+	width: 100%;
+	color: #fff;
+	font-family: SanSeif;
+	writing-mode: vertical-lr;
+}
+
+ol li::marker{
+  color: yellow;
+}
+
+.sup {
+  vertical-align: super;
+  text-decoration: none;
+  color: yellow;
+  list-style: decimal !important;
+}
+
+pre {
+    border: 2px solid #484848;
+    background: black;
+    color: gray;
+    border-radius: 6px;
+    overflow-y: scroll;
+}
+
+.content img, .content embed {
+  width: 100%; 
+}
+
+.diagram {
+  text-align: center;
+  font-style: italic;
 }

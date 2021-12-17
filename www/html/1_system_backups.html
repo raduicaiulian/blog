@@ -1,76 +1,92 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8"> 
-	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="css/blog_page.css">
-	<link rel="stylesheet" href="css/hover_popup.css">
-</head>
-<body>
-	<div class="header">
-		<h2>System backups</h2>
-		<div class="progress-container">
-			<div class="progress-bar" id="myBar"></div>
-		</div>  
-	</div>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8"> 
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/blog_page.css">
+		<link rel="stylesheet" href="css/hover_popup.css">
+	</head>
 
-	<div class="content">
-		Did you ever wondered how make a backup of the entire operating system system? I mean wouldn't be nice to export the state of <div id="popup">the entire system<span>GPT/MBR+ESP/Boot partition+OS main partition(ext4/ntfs/zfs ...)</span></div> in order to recover it later if an unfortunate event occurs. Kind of a VM snapshot, but on a real system.
-<br><br>
-Well, this is a question that popped in my mind after a lot of ..., let say <div id="popup">experiments<span>trying to make a dual boot setup while distro hopping, kernel recompilation done incorrectly</span></div> keep breaking my system over and over again and made me spend a lot of time trying to repair because of data that I do not afford to lose, don't get me wrong the skills learned while trying to repair a bootloader and to recover from system failure are very valuable, but too often this kind of problems keep you from doing other important activities.
-<br><br>
-		
-In the following I will present you my use case requirements and some of the solutions found.
+	<body>
+		<div class="header">
+			<h2>System backups</h2>
+			<div class="progress-container">
+				<div class="progress-bar" id="myBar"></div>
+			</div>  
+		</div>
 
-<h3>Raw copy</h3>
+		<h4 class="date unselecable">25/11/2021</h4>
 
-		One of the first use cases was to backup a 128 SSD in order to test something on some distro, talking about a relative small disk I tried to copy it using <a href="https://www.man7.org/linux/man-pages/man1/dd.1.html">dd(1)</a>, the result was pretty inconvenient because the whole process took <div id="popup">about 4h<span>this was because the destination drive was a sshfs share with a NIC of only 100 Mb/s ~ 12.5 MB/s</span></div> and, nevertheless, faced some file system corruption because I forgot to unmount the drive that were backed up at that time, apart from that dd did his job but used 128 GB of storage even if the allocated space on that disk was under 50%.
-<br><br>
-<!-- 
-			These days I had the 
-			<div id="popup">following setup
-				<span>
-					<ul>
-						<li>an internal nvme M.2(256 GB)</li>
-						<li>an external SSD(128 GB)</li>
-					</ul>
-				</span>
-			
-			</div>, and decided that I would like to change the os from the <div id="popup">first disk<span>256 GB one</span></div>.
--->
-<h3>Backup of each partition</h3>
-		This is a slightly more advanced approach because comes with the following advantages:
+		<div class="content">
+			Did you ever wondered how make a backup of the entire disk?
+				<br><br>
+			Well, this question popped into my mind after a lot of <div class="popup">experiments</div><a class="sup" id="fnref:1" href="#fn:1">1</a> which broke my system over and over again.
+			<br>
+			---------------------------------
+			<br>
+			Supozing that you also woud like to prevent this form happen in the future, lets analyze the required steps to make a backup of the entire drive, in order to do that we need to understand how data are stored on our driver, 1.1 diagram ilustrate a  <div class="popup">minimal</div><a class="sup" id="fnref:2" href="#fn:2">2</a> overview of your disk.
+				<br>
+			[diagaram] 
+				<br>
+			***to not confuze <a href="https://unix.stackexchange.com/questions/503241/what-does-disk-label-mean">disk lable</a> with partition lable***
+				<br><br><br>
+			So in the following I will present you my constraints for this problem and the solutions that satisfies these constraints.
+			<h3>Constraints</h3>
+				Becouse I want a solution that is more of a general backup, these are the requirements for the ideal soution:
+				<ul>
+					<li>it should preceive GPT, ESP, and the OS root partition filesystems;</li>
+					<li>it should support atleast EXT4(for linux root partition), FAT(for ESP), NTFS(for windows home partition);</li>
+				</ul>
+			<h3>Raw copy</h3>
+			The naive aproch, I call it so because despite of beeing one of the easyest solution it has some disadvantages like:
 			<ul>
-				<li>takes way less space</li>
-				<li>it runs faster</li>
-				<li>it is easier to resize a partition</li>
+				<li>it takes a considerable <div class="popup">amount</div><a class="sup" id="fnref:3" href="#fn:3">3</a> of time</li>
+				<li>the size of the backup is equal to the size of initial disk </li>
+				<li>it is not verry flexible(the backup can't be restored only partialy)</li>
 			</ul>
-		The steps used to make this kind of backup where the following:
-			.....
+			<br><br>
 
-<!--
-		<h3>Solutions</h3>
-		<ul>
-			<li>raw copy of the entire drive using dd</li>
-			<li>backup the partitioning scheme(MBR/GPT) and each partition independently</li>
-		</ul>
+			<h3>Backup of each partition</h3>
+				This is a slightly more advanced approach because comes with the following advantages:
+				<ul>
+					<li>takes way less space</li>
+					<li>it runs faster</li>
+					<li>allows us to exclude specific files or directoryes from the bckup</li>
+					<li>allows us to restore the backup on a <div class="popup">smaller</div><a class="sup" id="fnref:4" href="#fn:4">4</a> drive</li>
+				</ul>
+				The steps used to make this kind of backup where the following:
+				&mbsp;&mbsp;&mbsp;
+					<pre><code>
+#archive command for ext4 partition
+        sudo fsarchiver savefs /mnt/kesu/backup_ubuntu/ubuntu_ext4rootfs.fsa /dev/nvme0n1p2 -v -j4
+#exclude some dirs/files
+	#	--exclude
+#restore command for ext4 partition
+        sudo fsarchiver restfs /mnt/kesu/backup_ubuntu/ubuntu_ext4rootfs.fsa id=0,dest=/dev/nvme0n1p2 -v -j4
+#backup/restore esp partition
+	sudo dd if=/dev/nvme0n1p1 of=/mnt/kesu/backup_ubuntu/esp_boot status=progress
 
-	<h3>How it went</h3>
-	<p>
-	In the past I used the first solution in order to backup <div id="popup">the external disk<span>128 GB one</span></div> to <div id="popup">another PC<span>via sshf wich runs on top of a 500 GB HDD</span></div>, it worked but with the following <div id="popup">limitations<span><ul><li>it was verry slow(thanks to the 100 Mb/s Ethernet NIC )</li><li>cupied a lod of space( 128GB )</li></ul></u></span></div> also thanks to my <div id="popup">negligence<span>I forgot that the system was runing was on the same disk wich provoked some filesystems coruptions</span></div>, so if you ever intend to make this kind of backup preas remember to unmount the disk that you are copying.
-	</p>
-	
-	<p>
-		Fot that usecase a raw coppy was pretty ok becouse the disk was about 80% full, but now I'm facing the case that I have a disk wich is about 11% full, in this a raw backup is not eficient so I will explore the second solution.
-	</p>
--->
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<br><br><br><br><br><br><br>
+	sudo dd of=/dev/nvme0n1p1 if=/mnt/kesu/backup_ubuntu/esp_boot status=progress
+#backup GPT partition table
+	sudo sgdisk --backup=/mnt/kesu/backup_ubuntu/gpt_part_table.backup /dev/nvme0n1
+#restore GPT partition table
+	sgdisk --load-backup=/mnt/kesu/backup_ubuntu/gpt_part_table.backup /dev/nvme0n1
+				</code></pre>
 
-	<script src="js/scroll_bar.js"></script>
-</body>
+			<h3>Footnotes</h3>
+			<ol>
+				<li id="fn:1">dual boot, distro hopping, bad updates that breaks the DE <a onclick="document.documentElement.scrollTop-=100" href="#fnref:1">↩</a></li>
+				<li id="fn:2">supozing that you have just one root partition<a href="#fnref:2">↩</a></li>
+				<li id="fn:3">about 4h for an 128GB external SSD<a href="#fnref:3">↩</a></li>
+				<li id="fn:4">as long as the used space of the backedud drive si <= the size of the drive used for restore<a href="#fnref:4">↩</a></li>
+			</ol>
+		</div>
+		<!--https://askubuntu.com/questions/523037/how-would-i-speed-up-a-full-disk-dd-->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<script src="js/scroll_bar.js"></script>
+	</body>
 </html> 
 
 

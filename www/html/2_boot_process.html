@@ -1,35 +1,108 @@
 <html>
-
+	<!--<div class="popup">minimal</div><a class="sup" id="fnref:2" href="#fn:2">2</a>-->
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8"> 
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>                                           
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/blog_page.css">
+		<link rel="stylesheet" href="css/hover_popup.css">
+	</head>
 	<body>
-		<h1>How to repair the bootloader the ultimate guide<h1>
+		<div class="header">
+			<h2>The boot process</h2>
+			<div class="progress-container">
+				<div class="progress-bar" id="myBar"></div>
+			</div>  
+		</div>
 
-		<p>
-			If you feel that the process of booting is getting in your way every time you are tring to make a dual boot setup or boot repair is not solving you specific problem or maybe yout bios menu is somewhat different than from you old pc and does not allow you to manage the entryes form boot menu, then this blog is for you. In this blog I propose to explayn the boot process, with as much details as possible, on x86/x86_64(amd64) in order to overcome any problem that may appear during boot process.
+		<h4 class="date unselecable">03/11/2021</h4>
 
+		<div class="content">
+			
+			In this article I will decribe how the boot process works based on my experience (gained from online ressources and practical exemples done by myself), for the most part I will focus on the issues that can araise durng boot process.
 
-<h2>understanding (legacy) BIOS (CSM)</h2>
-Here I noticed 3 distinct terns that should be well defined in order to avoid conusion:
-	-BIOS
-	-legacy BIOS
-	-CSM
+			I will not hezitate to referenence the best online resources that hellped me to overcome most of the issues, instead of trying to reinvent the wheel, becouse obviously I'm not the most knowledgeable person that tackles this problem.
+			<br><br>
 
+			<h2>How the boot process works</h2>
+			Becouse "A picture is worth more than a thousand words" I think it is helpfull to ilustrate a high level overview of main components that interacts during boot process.
 
-	<h2>Understanding UEFI</h2>
-		UEFI specification is available at <a href="https://uefi.org/">uefi.org</a>,....
+			<br><br><br>
+			<embed id="d1" src="/images/2/boot_process.svg">
+			<p class="diagram">diagram: d1</p>
+			<br>			
 
-		***EFI Boot Stub makes it possible to boot a Linux kernel image without the use of a conventional UEFI boot loader(maskuarade)***
+			The takeaway from diagram <a href="#d1">d1</a> is that the firmware is the pice of software trigered whem the power button is pressed.
+			It performs a set of tasks required to turn on the system and passes control to the <div class="popup">primary bootloader</div> which can pass the control further either to a <div class="popup">secondarybootloader</div> either to the <div class="popup">operating system</div>.<br>
+			The secondary bootloader is used becouse it gives more flexibility( f.e. understands more file sytems than the firmware, you can customize it easyer) because it resids on disk and overwriting it is not as dangerous as overwriting the firmware wich may leave your system in an unusable state.
+			<br>
+			If you do not care about this flexibility you can make the primary bootloader of the firmware to pass the execution controll straight to to OS, from my knologe Linux <a href="https://wiki.gentoo.org/wiki/EFI_stub">support</a> this kind of feature if it is booted using UEFI.
+			<br><br>
+			The OS is dependent of the firmware that is trying boot him so alway make sure that the specific version of the os you intend to install is compatible with your firmware.
+	
+			Both UEFI and BIOS are distinct pieces of firmware which are responsable to "perform hardware initialization during the booting process" and "provide runtime services for operating systems and programs"<a class="sup" id="fnref:1" href="#fn:1">1</a>;<br>
 
-			As <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface#VARIABLE">wikipedia</a> mentions "EFI defines two types of services: boot services and runtime services."
-			</p>
+			Both UEFI and BIOS uses partition table to find out where is the (secondary) bootloader located<a class="sup" id="fnref:2" href="#fn:2">2</a>;<br>
 
-			A nice overview https://ocholuo.github.io/posts/Linux-BootProcessConcepts/
+			<h2>Bootloader vs boot manager</h2>
+			<br>
+			--------------TO DO------------
+			<br>
 
-			masquerade as a PE/COFF image <a href="https://www.kernel.org/doc/html/latest/admin-guide/efi-stub.html"></a>
+			Helpfull resources that can be used to install a bootloader/bootmanager can be found at:
+				<ul>
+					<li>
+						<a href="https://www.rodsbooks.com/efi-bootloaders/">Configuring the bootloader</a>
+					</li>
+					<li>
+						<a href="https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Bootloader">Managing EFI Boot Loaders for Linux</a>
+					</li>
+				</ul>
+				
+				
 
-			https://man.openbsd.org/biosboot
-			http://www.rodsbooks.com/refind/getting.html
+			<!--https://uefi.org/sites/default/files/resources/UEFI_Specification_2_and_Errata_Sept16_08.pdf#page=122-->
+			<!--masquerade as a PE/COFF image <a href="https://www.kernel.org/doc/html/latest/admin-guide/efi-stub.html"></a>
 			https://www.rodsbooks.com/gdisk/bios.html
-			https://www.linuxbabe.com/command-line/how-to-use-linux-efibootmgr-examples#
+			https://www.linuxbabe.com/command-line/how-to-use-linux-efibootmgr-examples#-->
+
+			<br>
+			Most of the information exposed above are extrracted from the folowing sources, so if you want a more detailed overvirew of each component and transition ilustrated in diagram <a href="#d1">d1</a>, pleas see these resources:
+			<ul>
+				<li>
+					<a href="https://www.happyassassin.net/posts/2014/01/25/uefi-boot-how-does-that-actually-work-then/">
+					UEFI boot: how does that actually work, then?
+					</a>
+				</li>
+				<li>
+					<a href="https://www.rodsbooks.com/linux-uefi/">Linux on UEFI:
+																	A Quick Installation Guide
+					</a>
+				</li>
+				<li>
+					<a href="https://blog.uncooperative.org/uefi/linux/shim/efi%20system%20partition/2014/02/06/the-efi-system-partition.html">
+						The EFI System Partition and the Default Boot Behavior
+					</a>
+					<a href="https://en.wikipedia.org/wiki/Booting#Second-stage_boot_loader">booting</a>
+				</li>
+				<li>
+					<a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface">Unified Extensible Firmware Interface</a>
+				</li>
+			</ul>
+
+			<h3>Footnotes</h3>
+			<ol>
+				<li id="fn:1">so <div class="popup">do not</div> associate these two terms together because they are not the same thing nor UEFI is an extension of BIOS, if you do such someone may get annoyed <a href="#fnref:1">↩</a>
+				</li>
+				<li id="fn:2">
+					Tehnicaly speaking the (secondary) bootloader is located either on <div class="popup">boot partition</div> so this means that <div class="popup">partition table</div> is used to identify one of these two partitions in order to be able to acces the (secondary) bootloader<a href="#fnref:2">↩</a>
+				</li>
+				<li>primary bootloader and secondary bootloader also called first-stage bootloader and second stage bootloader</li>
+			</ol>
+		</div>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<script src="js/scroll_bar.js"></script>
 	</body>
 
 <html>  

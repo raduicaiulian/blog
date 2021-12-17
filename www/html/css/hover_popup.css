@@ -6,11 +6,11 @@
 
 /*hoverpopups type 1*/
 
-#popup {
+.popup {
 	display: inline;
 }
 
-#popup, #popup:visited {
+.popup, .popup:visited {
 	display: inline;
 	width: 130px;
 	line-height: 30px;
@@ -21,39 +21,6 @@
 	font-size: 1em;
 	/*font-weight: bold;*/
 	background: black;
-}
-
-#popup span {
-	display: none;
-}
-
-#popup:hover { 
-	position: relative;
-	background-color: #e9e9e2; 
-}
-
-/* the IE correction rule */
-#popup:hover	{
-	position: relative;
-	color: #dbb646;
-	background-color: #000;
-	text-indent: 0; /* added the default value */
-}
-
-#popup:hover span {
-	display: inline;
-	position: absolute;
-	top: 0px;
-	left: 140px;
-	width: 100%;
-	margin: 39px -170px;
-	padding: 8px 32px;
-	color: #fff;
-	font-weight: normal;
-	background: #000;
-	text-align: left;
-	border: 1px solid #1b2062;
-	font-size: 18px;
 }
 
 
