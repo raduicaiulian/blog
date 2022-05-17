@@ -1,4 +1,0 @@
-#link path to html
-	ln -s /home/iulian/Documents/blog/www www
-#link to config dier
-	ln -s /etc/nginx/ etc_nginx

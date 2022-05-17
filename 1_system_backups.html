@@ -20,19 +20,7 @@
 		<h4 class="date unselecable">25/11/2021</h4>
 
 		<div class="content">
-			Did you ever wondered how make a backup of the entire disk?
-				<br><br>
-			Well, this question popped into my mind after a lot of <div class="popup">experiments</div><a class="sup" id="fnref:1" href="#fn:1">1</a> which broke my system over and over again.
-			<br>
-			---------------------------------
-			<br>
-			Supozing that you also woud like to prevent this form happen in the future, lets analyze the required steps to make a backup of the entire drive, in order to do that we need to understand how data are stored on our driver, 1.1 diagram ilustrate a  <div class="popup">minimal</div><a class="sup" id="fnref:2" href="#fn:2">2</a> overview of your disk.
-				<br>
-			[diagaram] 
-				<br>
-			***to not confuze <a href="https://unix.stackexchange.com/questions/503241/what-does-disk-label-mean">disk lable</a> with partition lable***
-				<br><br><br>
-			So in the following I will present you my constraints for this problem and the solutions that satisfies these constraints.
+			In this blog I'll explore some solutions used to backup the entire system, trying to achive this goal in the most eficient way possible.
 			<h3>Constraints</h3>
 				Becouse I want a solution that is more of a general backup, these are the requirements for the ideal soution:
 				<ul>
@@ -42,7 +30,7 @@
 			<h3>Raw copy</h3>
 			The naive aproch, I call it so because despite of beeing one of the easyest solution it has some disadvantages like:
 			<ul>
-				<li>it takes a considerable <div class="popup">amount</div><a class="sup" id="fnref:3" href="#fn:3">3</a> of time</li>
+				<li>it is nerry slow</li>
 				<li>the size of the backup is equal to the size of initial disk </li>
 				<li>it is not verry flexible(the backup can't be restored only partialy)</li>
 			</ul>
@@ -54,10 +42,9 @@
 					<li>takes way less space</li>
 					<li>it runs faster</li>
 					<li>allows us to exclude specific files or directoryes from the bckup</li>
-					<li>allows us to restore the backup on a <div class="popup">smaller</div><a class="sup" id="fnref:4" href="#fn:4">4</a> drive</li>
+					<li>allows us to restore the backup on a <div class="popup">smaller</div><a class="sup" id="fnref:1" href="#fn:1">1</a> drive</li>
 				</ul>
 				The steps used to make this kind of backup where the following:
-				&mbsp;&mbsp;&mbsp;
 					<pre><code>
 #archive command for ext4 partition
         sudo fsarchiver savefs /mnt/kesu/backup_ubuntu/ubuntu_ext4rootfs.fsa /dev/nvme0n1p2 -v -j4
@@ -74,13 +61,12 @@
 #restore GPT partition table
 	sgdisk --load-backup=/mnt/kesu/backup_ubuntu/gpt_part_table.backup /dev/nvme0n1
 				</code></pre>
-
+				<br>
+			More details about how to install and run fsarchiver can be found on their <a href="https://www.fsarchiver.org/">website</a>.
+			Nonetheless don't forgoet to edit the NVRAM Variables to point to your secondary bootloader located on the ESP partition, to do that you can use tools like efibootmgr or UEFI shell.
 			<h3>Footnotes</h3>
 			<ol>
-				<li id="fn:1">dual boot, distro hopping, bad updates that breaks the DE <a onclick="document.documentElement.scrollTop-=100" href="#fnref:1">↩</a></li>
-				<li id="fn:2">supozing that you have just one root partition<a href="#fnref:2">↩</a></li>
-				<li id="fn:3">about 4h for an 128GB external SSD<a href="#fnref:3">↩</a></li>
-				<li id="fn:4">as long as the used space of the backedud drive si <= the size of the drive used for restore<a href="#fnref:4">↩</a></li>
+				<li id="fn:1">as long as the used space of the backedud drive si <= the size of the drive used for restore<a href="#fnref:1">↩</a></li>
 			</ol>
 		</div>
 		<!--https://askubuntu.com/questions/523037/how-would-i-speed-up-a-full-disk-dd-->
