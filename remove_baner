@@ -1,0 +1,11 @@
+	<script>
+	remove_ad();
+	function remove_ad() {
+      var select = document.getElementsByTagName('body')[0];
+      var disc = document.getElementsByClassName('disclaimer')[0];
+      //select.removeChild(select.lastChild-1);
+      select.removeChild(disc);
+      
+    }
+
+	</script>
